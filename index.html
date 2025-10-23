@@ -4,10 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barangay Santol - Barangay Management</title>
+    <title>Santol - Barangay Management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
+        @keyframes rainbow-shift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .rainbow-mode {
+            background-color: #f0f0f5 !important;
+            background-size: 400% 400%;
+            animation: rainbow-shift 30s ease infinite alternate;
+        }
+
         html,
         body {
             height: 100%;
@@ -391,6 +407,23 @@
             color: #721c24;
         }
 
+        .gender-badge.bakla {
+            background-image: linear-gradient(90deg, #ff0000, #ff8000, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+            background-color: transparent;
+            color: white;
+            background-clip: padding-box;
+            -webkit-background-clip: padding-box;
+            -webkit-text-fill-color: initial;
+            border: 1px solid #8e24aa;
+            padding: 3px 8px;
+            font-weight: 600;
+            text-transform: capitalize;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+        }
+
 
         .search-box {
             display: flex;
@@ -421,9 +454,6 @@
             background: #0038A8;
         }
 
-
-
-
         .file-input {
             display: none;
         }
@@ -444,7 +474,6 @@
         .modal-content {
             background-color: #fefefe;
             margin: 10% auto;
-
             padding: 30px;
             border-radius: 10px;
             width: 80%;
@@ -539,7 +568,7 @@
                         <i class="fas fa-landmark"></i>
                     </div>
                     <div class="logo-text">
-                        <h1>RAMBUTAN</h1>
+                        <h1>SANTOL</h1>
                         <p>Barangay Management System</p>
                     </div>
                 </div>
@@ -684,7 +713,6 @@
         }
 
 
-
         document.getElementById('uploadBtn').addEventListener('click', function () {
             document.getElementById('fileInput').click();
         });
@@ -753,13 +781,17 @@
                 try {
                     const data = new Uint8Array(e.target.result);
 
-                    const workbook = XLSX.read(data, { type: 'array' });
+                    const workbook = XLSX.read(data, {
+                        type: 'array'
+                    });
 
 
                     const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
 
 
-                    let jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                    let jsonData = XLSX.utils.sheet_to_json(firstSheet, {
+                        header: 1
+                    });
 
 
                     jsonData = XLSX.utils.sheet_to_json(firstSheet);
@@ -783,7 +815,6 @@
                         };
                         return newCitizen;
                     }).filter(c => c['FIRST NAME'] && c['LAST NAME']);
-
 
 
                     document.getElementById('fileInput').value = '';
@@ -826,7 +857,6 @@
         }
 
 
-
         function renderTable(citizens) {
             const tableBody = document.getElementById('tableBody');
             tableBody.innerHTML = '';
@@ -848,9 +878,17 @@
                     row.setAttribute('data-id', citizen.id);
 
 
-                    const gender = String(citizen.GENDER || '').trim();
-                    const genderDisplay = gender.charAt(0).toUpperCase() + gender.slice(1).toLowerCase();
-                    const genderClass = genderDisplay.toLowerCase();
+                    const gender = String(citizen.GENDER || '').trim().toLowerCase();
+                    let genderDisplay = 'N/A';
+                    let genderClass = 'n-a';
+
+                    if (gender === 'male' || gender === 'female' || gender === 'bakla') {
+                        genderDisplay = gender.charAt(0).toUpperCase() + gender.slice(1);
+                        genderClass = gender;
+                    } else {
+                        genderDisplay = String(citizen.GENDER || '').trim();
+                        genderClass = 'n-a';
+                    }
 
                     row.innerHTML = `
                         <td><span class="purok-badge">Purok ${citizen.PUROK || 'N/A'}</span></td>
@@ -884,9 +922,17 @@
 
             const maleCount = citizens.filter(c => String(c.GENDER).toLowerCase() === 'male').length;
             const femaleCount = citizens.filter(c => String(c.GENDER).toLowerCase() === 'female').length;
+            const baklaCount = citizens.filter(c => String(c.GENDER).toLowerCase() === 'bakla').length;
 
             document.getElementById('totalMale').textContent = maleCount;
             document.getElementById('totalFemale').textContent = femaleCount;
+
+            const body = document.querySelector('body');
+            if (baklaCount > 0) {
+                body.classList.add('rainbow-mode');
+            } else {
+                body.classList.remove('rainbow-mode');
+            }
         }
 
 
@@ -940,7 +986,7 @@
                     const newPurok = prompt(`Enter new Purok for ${newFirstName} ${newLastName}:`, citizen.PUROK);
 
                     if (newPurok !== null && newPurok.trim() !== '') {
-                        const newGender = prompt(`Enter new Gender ('Male' or 'Female') for ${newFirstName} ${newLastName}:`, citizen.GENDER);
+                        const newGender = prompt(`Enter new Gender ('Male', 'Female', or 'Bakla') for ${newFirstName} ${newLastName}:`, citizen.GENDER);
 
                         if (newGender !== null && newGender.trim() !== '') {
 
@@ -973,7 +1019,6 @@ Gender: ${citizen.GENDER}
         }
 
 
-
         document.getElementById('exportBtn').addEventListener('click', exportToXLSX);
 
         function exportToXLSX() {
@@ -1001,7 +1046,6 @@ Gender: ${citizen.GENDER}
         }
 
 
-
         document.getElementById('searchBtn').addEventListener('click', performSearch);
         document.getElementById('searchInput').addEventListener('keyup', function (e) {
             if (e.key === 'Enter') {
@@ -1027,16 +1071,58 @@ Gender: ${citizen.GENDER}
         }
 
 
-
         window.onload = function () {
 
             const sampleData = [
-                { id: 101, PUROK: '1', 'FIRST NAME': 'Juan', 'LAST NAME': 'Dela Cruz', GENDER: 'Male' },
-                { id: 102, PUROK: '2', 'FIRST NAME': 'Maria', 'LAST NAME': 'Santos', GENDER: 'Female' },
-                { id: 103, PUROK: '3', 'FIRST NAME': 'Pedro', 'LAST NAME': 'Reyes', GENDER: 'Male' },
-                { id: 104, PUROK: '1', 'FIRST NAME': 'Ana', 'LAST NAME': 'Lopez', GENDER: 'Female' },
-                { id: 105, PUROK: '4', 'FIRST NAME': 'Luis', 'LAST NAME': 'Gonzales', GENDER: 'Male' },
-                { id: 106, PUROK: '2', 'FIRST NAME': 'Elena', 'LAST NAME': 'Torres', GENDER: 'Female' }
+                {
+                    id: 101,
+                    PUROK: '1',
+                    'FIRST NAME': 'Juan',
+                    'LAST NAME': 'Dela Cruz',
+                    GENDER: 'Male'
+                },
+                {
+                    id: 102,
+                    PUROK: '2',
+                    'FIRST NAME': 'Maria',
+                    'LAST NAME': 'Santos',
+                    GENDER: 'Female'
+                },
+                {
+                    id: 103,
+                    PUROK: '3',
+                    'FIRST NAME': 'Pedro',
+                    'LAST NAME': 'Reyes',
+                    GENDER: 'Male'
+                },
+                {
+                    id: 107,
+                    PUROK: '5',
+                    'FIRST NAME': 'Benjie',
+                    'LAST NAME': 'Paras',
+                    GENDER: 'Male'
+                },
+                {
+                    id: 104,
+                    PUROK: '1',
+                    'FIRST NAME': 'Ana',
+                    'LAST NAME': 'Lopez',
+                    GENDER: 'Female'
+                },
+                {
+                    id: 105,
+                    PUROK: '4',
+                    'FIRST NAME': 'Luis',
+                    'LAST NAME': 'Gonzales',
+                    GENDER: 'Male'
+                },
+                {
+                    id: 106,
+                    PUROK: '2',
+                    'FIRST NAME': 'Elena',
+                    'LAST NAME': 'Torres',
+                    GENDER: 'Female'
+                }
             ];
 
             allCitizensData = sampleData;
@@ -1046,4 +1132,3 @@ Gender: ${citizen.GENDER}
 </body>
 
 </html>
-
