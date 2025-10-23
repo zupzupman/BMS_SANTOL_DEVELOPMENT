@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barangay Santol - Citizen Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            height: calc(100vh - 50px);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0038A8, #0066CC);
+            color: white;
+            padding: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .header-util {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .instructions-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .instructions-btn i {
+            margin-right: 8px;
+        }
+
+        .instructions-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .logo-text {
+            line-height: 1.1;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-text p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .date-display {
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 20px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .left-column::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .left-column::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 4px;
+        }
+
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+        }
+
+        .card.stats-card {
+            flex-shrink: 0;
+        }
+
+        .card.import-card {
+            flex-shrink: 0;
+        }
+
+        .card.citizen-table-card {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+
+        .card h2 {
+            color: #0038A8;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            align-items: center;
+            font-size: 1.2rem;
+            justify-content: space-between;
+        }
+
+        .card h2 .title-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .stats-card h2, .import-card h2 {
+            border-bottom: none;
+            justify-content: flex-start;
+        }
+
+
+        .card h2 i {
+            margin-right: 10px;
+        }
+
+        .upload-area {
+            border: 2px dashed #0038A8;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: #f8fbff;
+        }
+
+        .upload-area:hover {
+            background-color: #e6f0ff;
+        }
+
+        .upload-icon {
+            font-size: 2.5rem;
+            color: #0038A8;
+            margin-bottom: 10px;
+        }
+
+        .upload-text {
+            margin-bottom: 10px;
+        }
+
+        .upload-text h3 {
+            color: #0038A8;
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+
+        .upload-text p {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .btn {
+            background: #0038A8;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        #exportBtn {
+            background: #28a745;
+            padding: 5px 10px;
+        }
+
+        #exportBtn:hover {
+            background: #1e7e34;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: #f8fbff;
+            border-left: 4px solid #0038A8;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .stat-card h3 {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 3px;
+        }
+
+        .stat-card .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0038A8;
+        }
+
+        .table-wrapper {
+            flex-grow: 1;
+            min-height: 0;
+            overflow-y: auto;
+            border: 1px solid #eaeaea;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #0038A8;
+            color: white;
+            text-align: left;
+            padding: 10px 15px;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eaeaea;
+            font-size: 0.9rem;
+        }
+
+        td.actions {
+            white-space: nowrap;
+            text-align: center;
+            width: 1%;
+        }
+
+        .action-btn {
+            background: none;
+            border: 1px solid #ccc;
+            color: #666;
+            padding: 5px 8px;
+            margin: 0 3px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .action-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .action-btn[title="Edit"]:hover {
+            color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        .action-btn[title="Delete"]:hover {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .purok-badge,
+        .gender-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .purok-badge {
+            background-color: #e3f2fd;
+            color: #0038A8;
+        }
+
+        .gender-badge.male {
+            background-color: #cfe2ff;
+            color: #004085;
+        }
+
+        .gender-badge.female {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+
+        .search-box {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        #searchInput {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        #searchBtn {
+            background: #0066CC;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        #searchBtn:hover {
+            background: #0038A8;
+        }
+
+
+        .file-input {
+            display: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .modal-content h2 {
+            color: #0038A8;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eaeaea;
+            padding-bottom: 8px;
+            justify-content: flex-start;
+        }
+
+        .modal-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+            list-style-type: disc;
+        }
+
+        .modal-content p {
+            margin-bottom: 10px;
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                overflow-y: auto;
+                height: auto;
+            }
+
+            .container {
+                height: auto;
+                overflow: hidden;
+            }
+
+            html,
+            body {
+                overflow: auto;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                padding: 0 15px;
+            }
+
+            .logo {
+                flex-direction: column;
+                margin-bottom: 10px;
+            }
+
+            .logo-icon {
+                margin-right: 0;
+            }
+
+            .header-util {
+                flex-direction: column;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-landmark"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>BARANGAY SANTOL</h1>
+                        <p>Citizen Management System</p>
+                    </div>
+                </div>
+                <div class="header-util">
+                    <button class="instructions-btn" id="instructionsBtn">
+                        <i class="fas fa-info-circle"></i> Instructions
+                    </button>
+                    <div class="date-display">
+                        <i class="far fa-calendar-alt"></i> <span id="current-date">October 10, 2024</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="left-column">
+                <div class="card stats-card">
+                    <h2><i class="fas fa-chart-bar"></i> Statistics</h2>
+                    <div class="stats">
+                        <div class="stat-card">
+                            <h3>Total Citizens</h3>
+                            <div class="value" id="totalCitizens">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Puroks</h3>
+                            <div class="value" id="totalPuroks">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Male</h3>
+                            <div class="value" id="totalMale">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Female</h3>
+                            <div class="value" id="totalFemale">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card import-card">
+                    <h2><i class="fas fa-file-import"></i> Import Data</h2>
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">
+                            <i class="fas fa-file-excel"></i>
+                        </div>
+                        <div class="upload-text">
+                            <h3>Upload Excel File</h3>
+                            <p>Required: PUROK, FIRST NAME, LAST NAME, GENDER</p>
+                        </div>
+                        <button class="btn" id="uploadBtn">
+                            <i class="fas fa-upload"></i> Choose File
+                        </button>
+                        <input type="file" id="fileInput" class="file-input" accept=".xlsx, .xls">
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-column">
+                <div class="card citizen-table-card">
+                    <h2>
+                        <span class="title-group">
+                            <i class="fas fa-users"></i> Barangay Citizens
+                        </span>
+                        <button class="btn" id="exportBtn">
+                            <i class="fas fa-file-export"></i> Export as XLSX
+                        </button>
+                    </h2>
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Search citizens...">
+                        <button id="searchBtn"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="citizenTable">
+                            <thead>
+                                <tr>
+                                    <th>Purok</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Gender</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; padding: 30px; color: #666;">
+                                        No citizen data available. Upload an Excel file to get started.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="instructionsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2><i class="fas fa-info-circle"></i> Instructions</h2>
+            <p>1. Prepare your Excel file with the following columns:</p>
+            <ul>
+                <li>**PUROK**</li>
+                <li>**FIRST NAME**</li>
+                <li>**LAST NAME**</li>
+                <li>**GENDER** (Must be 'Male' or 'Female')</li>
+            </ul>
+            <p>2. Click **Choose File** in the Import Data section to upload your Excel file.</p>
+            <p>3. The data will automatically appear in the Barangay Citizens table.</p>
+        </div>
+    </div>
+    <script>
+        let allCitizensData = [];
+
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        const modal = document.getElementById("instructionsModal");
+        const btn = document.getElementById("instructionsBtn");
+        const span = document.getElementsByClassName("close-btn")[0];
+
+        btn.onclick = function () {
+            modal.style.display = "block";
+        }
+
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        document.getElementById('uploadBtn').addEventListener('click', function () {
+            document.getElementById('fileInput').click();
+        });
+
+        document.getElementById('fileInput').addEventListener('change', handleFileUpload);
+        document.getElementById('uploadArea').addEventListener('dragover', function (e) {
+            e.preventDefault();
+            this.style.backgroundColor = '#e6f0ff';
+        });
+
+        document.getElementById('uploadArea').addEventListener('dragleave', function (e) {
+            e.preventDefault();
+            this.style.backgroundColor = '#f8fbff';
+        });
+
+        document.getElementById('uploadArea').addEventListener('drop', function (e) {
+            e.preventDefault();
+            this.style.backgroundColor = '#f8fbff';
+            if (e.dataTransfer.files.length) {
+                handleFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        function handleFileUpload(e) {
+            if (e.target.files.length) {
+                handleFile(e.target.files[0]);
+            }
+        }
+
+        function handleFile(file) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                let jsonData = XLSX.utils.sheet_to_json(firstSheet);
+
+                jsonData = jsonData.map((citizen, index) => ({
+                    id: Date.now() + index,
+                    ...citizen
+                }));
+
+                document.getElementById('fileInput').value = '';
+
+                allCitizensData = jsonData;
+                renderTable(allCitizensData);
+            };
+
+            reader.readAsArrayBuffer(file);
+            document.getElementById('uploadArea').innerHTML = `
+                <div class="upload-icon">
+                    <i class="fas fa-check-circle" style="color: #28a745;"></i>
+                </div>
+                <div class="upload-text">
+                    <h3>File Uploaded Successfully!</h3>
+                    <p>Processing ${file.name}...</p>
+                </div>
+                <button class="btn" id="uploadBtn_replace" style="margin-top: 10px;">
+                    <i class="fas fa-upload"></i> Upload Another File
+                </button>
+            `;
+            document.getElementById('uploadBtn_replace').addEventListener('click', function () {
+                document.getElementById('fileInput').click();
+            });
+        }
+
+        function renderTable(citizens) {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+
+            if (citizens.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 30px; color: #666;">
+                            No citizen data available. Upload an Excel file to get started.
+                        </td>
+                    </tr>
+                `;
+            } else {
+                citizens.forEach(citizen => {
+                    const row = document.createElement('tr');
+                    row.setAttribute('data-id', citizen.id);
+
+                    const gender = String(citizen.GENDER || '').trim();
+                    const genderDisplay = gender.charAt(0).toUpperCase() + gender.slice(1).toLowerCase();
+                    const genderClass = genderDisplay.toLowerCase();
+
+                    row.innerHTML = `
+                        <td><span class="purok-badge">Purok ${citizen.PUROK || 'N/A'}</span></td>
+                        <td>${citizen['FIRST NAME'] || ''}</td>
+                        <td>${citizen['LAST NAME'] || ''}</td>
+                        <td><span class="gender-badge ${genderClass}">${genderDisplay || 'N/A'}</span></td>
+                        <td class="actions">
+                            <button class="action-btn view-btn" title="View Details" data-id="${citizen.id}"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn edit-btn" title="Edit" data-id="${citizen.id}"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn delete-btn" title="Delete" data-id="${citizen.id}"><i class="fas fa-trash"></i></button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            updateStatistics(allCitizensData);
+
+            attachActionListeners();
+        }
+
+        function updateStatistics(citizens) {
+            document.getElementById('totalCitizens').textContent = citizens.length;
+
+            const puroks = [...new Set(citizens.map(c => c.PUROK))].filter(p => p !== undefined && p !== null);
+            document.getElementById('totalPuroks').textContent = puroks.length;
+
+            const maleCount = citizens.filter(c => String(c.GENDER).toLowerCase() === 'male').length;
+            const femaleCount = citizens.filter(c => String(c.GENDER).toLowerCase() === 'female').length;
+
+            document.getElementById('totalMale').textContent = maleCount;
+            document.getElementById('totalFemale').textContent = femaleCount;
+        }
+
+        function attachActionListeners() {
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.removeEventListener('click', handleDelete);
+                button.addEventListener('click', handleDelete);
+            });
+
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.removeEventListener('click', handleEdit);
+                button.addEventListener('click', handleEdit);
+            });
+
+            document.querySelectorAll('.view-btn').forEach(button => {
+                button.removeEventListener('click', handleView);
+                button.addEventListener('click', handleView);
+            });
+        }
+
+        function handleDelete(event) {
+            const citizenId = Number(event.currentTarget.getAttribute('data-id'));
+            const citizen = allCitizensData.find(c => c.id === citizenId);
+
+            if (confirm(`Are you sure you want to delete ${citizen['FIRST NAME']} ${citizen['LAST NAME']} (Purok ${citizen.PUROK})?`)) {
+                allCitizensData = allCitizensData.filter(c => c.id !== citizenId);
+
+                renderTable(allCitizensData);
+                alert('Citizen successfully removed.');
+            }
+        }
+
+        function handleEdit(event) {
+            const citizenId = Number(event.currentTarget.getAttribute('data-id'));
+            const citizen = allCitizensData.find(c => c.id === citizenId);
+
+            if (!citizen) return;
+
+            const newFirstName = prompt(`Editing First Name for ${citizen['FIRST NAME']} ${citizen['LAST NAME']}.\nEnter new First Name:`, citizen['FIRST NAME']);
+
+            if (newFirstName !== null && newFirstName.trim() !== '') {
+                const newLastName = prompt(`Enter new Last Name for ${newFirstName} ${citizen['LAST NAME']}:`, citizen['LAST NAME']);
+
+                if (newLastName !== null && newLastName.trim() !== '') {
+                    const newPurok = prompt(`Enter new Purok for ${newFirstName} ${newLastName}:`, citizen.PUROK);
+
+                    if (newPurok !== null && newPurok.trim() !== '') {
+                        const newGender = prompt(`Enter new Gender ('Male' or 'Female') for ${newFirstName} ${newLastName}:`, citizen.GENDER);
+
+                        if (newGender !== null && newGender.trim() !== '') {
+                            citizen['FIRST NAME'] = newFirstName.trim();
+                            citizen['LAST NAME'] = newLastName.trim();
+                            citizen.PUROK = newPurok.trim();
+                            citizen.GENDER = newGender.trim();
+
+                            renderTable(allCitizensData);
+                            alert('Citizen data updated successfully!');
+                        }
+                    }
+                }
+            }
+        }
+
+        function handleView(event) {
+            const citizenId = Number(event.currentTarget.getAttribute('data-id'));
+            const citizen = allCitizensData.find(c => c.id === citizenId);
+
+            if (!citizen) return;
+
+            alert(`--- Citizen Details ---
+Purok: ${citizen.PUROK}
+First Name: ${citizen['FIRST NAME']}
+Last Name: ${citizen['LAST NAME']}
+Gender: ${citizen.GENDER}
+`);
+        }
+
+        document.getElementById('exportBtn').addEventListener('click', exportToXLSX);
+
+        function exportToXLSX() {
+            if (allCitizensData.length === 0) {
+                alert("No data to export. Please upload a file first.");
+                return;
+            }
+
+            const dataToExport = allCitizensData.map(c => ({
+                PUROK: c.PUROK,
+                'FIRST NAME': c['FIRST NAME'],
+                'LAST NAME': c['LAST NAME'],
+                GENDER: c.GENDER
+            }));
+
+            const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Barangay Citizens");
+
+            XLSX.writeFile(workbook, "Barangay_Santol_Citizens.xlsx");
+
+            alert(`Exported ${dataToExport.length} records to "Barangay_Santol_Citizens.xlsx"!`);
+        }
+
+        document.getElementById('searchBtn').addEventListener('click', performSearch);
+        document.getElementById('searchInput').addEventListener('keyup', function (e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            } else if (this.value === '' && e.key === 'Backspace') {
+                performSearch();
+            }
+        });
+
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#tableBody tr');
+            let found = false;
+
+            rows.forEach(row => {
+                if (row.querySelector('td[colspan="5"]')) {
+                    row.style.display = (allCitizensData.length > 0 && searchTerm === '') ? 'none' : 'table-row';
+                    return;
+                }
+
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                    found = true;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        window.onload = function () {
+            const sampleData = [
+                { id: 101, PUROK: '1', 'FIRST NAME': 'Juan', 'LAST NAME': 'Dela Cruz', GENDER: 'Male' },
+                { id: 102, PUROK: '2', 'FIRST NAME': 'Maria', 'LAST NAME': 'Santos', GENDER: 'Female' },
+                { id: 103, PUROK: '3', 'FIRST NAME': 'Pedro', 'LAST NAME': 'Reyes', GENDER: 'Male' },
+                { id: 104, PUROK: '1', 'FIRST NAME': 'Ana', 'LAST NAME': 'Lopez', GENDER: 'Female' },
+                { id: 105, PUROK: '4', 'FIRST NAME': 'Luis', 'LAST NAME': 'Gonzales', GENDER: 'Male' },
+                { id: 106, PUROK: '2', 'FIRST NAME': 'Elena', 'LAST NAME': 'Torres', GENDER: 'Female' }
+            ];
+
+            allCitizensData = sampleData;
+            renderTable(allCitizensData);
+        };
+    </script>
+</body>
+
+</html>
