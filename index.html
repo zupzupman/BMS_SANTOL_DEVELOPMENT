@@ -8,14 +8,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        
         html,
         body {
             height: 100%;
             margin: 0;
             padding: 0;
             overflow: hidden;
-            
+
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f5f7fa;
             color: #333;
@@ -24,7 +23,7 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            
+
             height: calc(100vh - 50px);
             padding: 20px;
             display: flex;
@@ -48,7 +47,7 @@
             padding: 0 30px;
         }
 
-        
+
         .header-util {
             display: flex;
             align-items: center;
@@ -60,9 +59,9 @@
             border: 1px solid rgba(255, 255, 255, 0.5);
             color: white;
             padding: 8px 15px;
-            
+
             border-radius: 20px;
-            
+
             cursor: pointer;
             font-weight: 600;
             transition: background 0.3s;
@@ -110,12 +109,12 @@
             border-radius: 20px;
         }
 
-        
+
         .main-content {
             display: grid;
             grid-template-columns: 1fr 3fr;
             gap: 20px;
-            
+
             flex-grow: 1;
             min-height: 0;
         }
@@ -123,15 +122,15 @@
         .left-column {
             display: flex;
             flex-direction: column;
-            
+
             gap: 20px;
             overflow-y: auto;
-            
+
             padding-right: 5px;
-            
+
         }
 
-        
+
         .left-column::-webkit-scrollbar {
             width: 8px;
         }
@@ -152,26 +151,26 @@
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             padding: 20px;
-            
+
         }
 
-        
+
         .card.stats-card {
             flex-shrink: 0;
         }
 
-        
+
         .card.import-card {
             flex-shrink: 0;
         }
 
-        
+
         .card.citizen-table-card {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
             min-height: 0;
-            
+
         }
 
 
@@ -183,22 +182,22 @@
             display: flex;
             align-items: center;
             font-size: 1.2rem;
-            
+
             justify-content: space-between;
         }
 
-        
+
         .card h2 .title-group {
             display: flex;
             align-items: center;
         }
 
-        
-        .stats-card h2, .import-card h2 {
+
+        .stats-card h2,
+        .import-card h2 {
             border-bottom: none;
-            
             justify-content: flex-start;
-            
+
         }
 
 
@@ -256,12 +255,12 @@
             font-size: 0.9rem;
         }
 
-        
+
         #exportBtn {
             background: #28a745;
-            
+
             padding: 5px 10px;
-            
+
         }
 
         #exportBtn:hover {
@@ -279,7 +278,7 @@
             border-left: 4px solid #0038A8;
             padding: 12px;
             border-radius: 5px;
-            
+
             margin-bottom: 5px;
         }
 
@@ -295,12 +294,12 @@
             color: #0038A8;
         }
 
-        
+
         .table-wrapper {
             flex-grow: 1;
             min-height: 0;
             overflow-y: auto;
-            
+
             border: 1px solid #eaeaea;
             border-radius: 8px;
         }
@@ -317,7 +316,7 @@
             padding: 10px 15px;
             font-weight: 600;
             position: sticky;
-            
+
             top: 0;
             z-index: 10;
         }
@@ -328,16 +327,16 @@
             font-size: 0.9rem;
         }
 
-        
+
         td.actions {
             white-space: nowrap;
-            
+
             text-align: center;
             width: 1%;
-            
+
         }
 
-        
+
         .action-btn {
             background: none;
             border: 1px solid #ccc;
@@ -356,17 +355,17 @@
 
         .action-btn[title="Edit"]:hover {
             color: #ffc107;
-            
+
             border-color: #ffc107;
         }
 
         .action-btn[title="Delete"]:hover {
             color: #dc3545;
-            
+
             border-color: #dc3545;
         }
 
-        
+
         .purok-badge,
         .gender-badge {
             display: inline-block;
@@ -398,7 +397,7 @@
             margin-bottom: 15px;
         }
 
-        
+
         #searchInput {
             flex-grow: 1;
             padding: 10px;
@@ -423,13 +422,13 @@
         }
 
 
-        
+
 
         .file-input {
             display: none;
         }
 
-        
+
         .modal {
             display: none;
             position: fixed;
@@ -445,7 +444,7 @@
         .modal-content {
             background-color: #fefefe;
             margin: 10% auto;
-            
+
             padding: 30px;
             border-radius: 10px;
             width: 80%;
@@ -457,7 +456,7 @@
         .modal-content h2 {
             color: #0038A8;
             margin-bottom: 15px;
-            
+
             border-bottom: 1px solid #eaeaea;
             padding-bottom: 8px;
             justify-content: flex-start;
@@ -641,7 +640,8 @@
         <div class="modal-content">
             <span class="close-btn">&times;</span>
             <h2><i class="fas fa-info-circle"></i> Instructions</h2>
-            <p>1. Prepare your Excel file with the following columns in the **first row**, **spelled and cased exactly** as shown:</p>
+            <p>1. Prepare your Excel file with the following columns in the **first row**, **spelled and cased exactly**
+                as shown:</p>
             <ul>
                 <li>**PUROK**</li>
                 <li>**FIRST NAME** (with a space)</li>
@@ -654,17 +654,17 @@
     </div>
 
     <script>
-        
+
         let allCitizensData = [];
 
-        
+
         document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
         });
 
-        
+
         const modal = document.getElementById("instructionsModal");
         const btn = document.getElementById("instructionsBtn");
         const span = document.getElementsByClassName("close-btn")[0];
@@ -682,16 +682,16 @@
                 modal.style.display = "none";
             }
         }
-        
 
-        
+
+
         document.getElementById('uploadBtn').addEventListener('click', function () {
             document.getElementById('fileInput').click();
         });
 
         document.getElementById('fileInput').addEventListener('change', handleFileUpload);
 
-        
+
         document.getElementById('uploadArea').addEventListener('dragover', function (e) {
             e.preventDefault();
             this.style.backgroundColor = '#e6f0ff';
@@ -716,7 +716,7 @@
             }
         }
 
-        
+
         function validateData(data) {
             if (data.length === 0) {
                 console.error("Excel file is empty or no data rows found.");
@@ -724,12 +724,12 @@
                 return false;
             }
 
-            
+
             const requiredHeaders = ['PUROK', 'FIRST NAME', 'LAST NAME', 'GENDER'];
             const firstRow = data[0];
             const actualHeaders = Object.keys(firstRow);
-            
-            
+
+
             const missingHeaders = requiredHeaders.filter(header => !actualHeaders.includes(header));
 
             if (missingHeaders.length > 0) {
@@ -752,27 +752,27 @@
             reader.onload = function (e) {
                 try {
                     const data = new Uint8Array(e.target.result);
-                    
+
                     const workbook = XLSX.read(data, { type: 'array' });
 
-                    
+
                     const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                    
-                    
+
+
                     let jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
 
-                    
+
                     jsonData = XLSX.utils.sheet_to_json(firstSheet);
 
                     console.log("Data successfully converted to JSON array. Total rows (excluding header):", jsonData.length);
 
-                    
+
                     if (!validateData(jsonData)) {
-                        
+
                         return;
                     }
 
-                    
+
                     jsonData = jsonData.map((citizen, index) => {
                         const newCitizen = {
                             id: Date.now() + index + Math.random(),
@@ -782,17 +782,17 @@
                             'GENDER': String(citizen['GENDER'] || '').trim()
                         };
                         return newCitizen;
-                    }).filter(c => c['FIRST NAME'] && c['LAST NAME']); 
+                    }).filter(c => c['FIRST NAME'] && c['LAST NAME']);
 
 
-                    
+
                     document.getElementById('fileInput').value = '';
 
-                    
+
                     allCitizensData = jsonData;
                     renderTable(allCitizensData);
 
-                    
+
                     document.getElementById('uploadArea').innerHTML = `
                         <div class="upload-icon">
                             <i class="fas fa-check-circle" style="color: #28a745;"></i>
@@ -805,7 +805,7 @@
                             <i class="fas fa-upload"></i> Upload Another File
                         </button>
                     `;
-                    
+
                     document.getElementById('uploadBtn_replace').addEventListener('click', function () {
                         document.getElementById('fileInput').click();
                     });
@@ -824,9 +824,9 @@
 
             reader.readAsArrayBuffer(file);
         }
-        
 
-        
+
+
         function renderTable(citizens) {
             const tableBody = document.getElementById('tableBody');
             tableBody.innerHTML = '';
@@ -836,9 +836,9 @@
                     <tr>
                         <td colspan="5" style="text-align: center; padding: 30px; color: #666;">
                             ${allCitizensData.length === 0 ?
-                                'No citizen data available. Upload an Excel file to get started.' :
-                                'No results found for the current search.'
-                            }
+                        'No citizen data available. Upload an Excel file to get started.' :
+                        'No results found for the current search.'
+                    }
                         </td>
                     </tr>
                 `;
@@ -847,7 +847,7 @@
                     const row = document.createElement('tr');
                     row.setAttribute('data-id', citizen.id);
 
-                    
+
                     const gender = String(citizen.GENDER || '').trim();
                     const genderDisplay = gender.charAt(0).toUpperCase() + gender.slice(1).toLowerCase();
                     const genderClass = genderDisplay.toLowerCase();
@@ -867,21 +867,21 @@
                 });
             }
 
-            
+
             updateStatistics(allCitizensData);
 
-            
+
             attachActionListeners();
         }
 
         function updateStatistics(citizens) {
             document.getElementById('totalCitizens').textContent = citizens.length;
 
-            
+
             const puroks = [...new Set(citizens.map(c => c.PUROK))].filter(p => p !== undefined && p !== null && p !== 'N/A' && p !== '');
             document.getElementById('totalPuroks').textContent = puroks.length;
 
-            
+
             const maleCount = citizens.filter(c => String(c.GENDER).toLowerCase() === 'male').length;
             const femaleCount = citizens.filter(c => String(c.GENDER).toLowerCase() === 'female').length;
 
@@ -889,11 +889,11 @@
             document.getElementById('totalFemale').textContent = femaleCount;
         }
 
-        
+
 
         function attachActionListeners() {
             document.querySelectorAll('.delete-btn').forEach(button => {
-                button.removeEventListener('click', handleDelete); 
+                button.removeEventListener('click', handleDelete);
                 button.addEventListener('click', handleDelete);
             });
 
@@ -915,10 +915,10 @@
             if (!citizen) return;
 
             if (confirm(`Are you sure you want to delete ${citizen['FIRST NAME']} ${citizen['LAST NAME']} (Purok ${citizen.PUROK})?`)) {
-                
+
                 allCitizensData = allCitizensData.filter(c => c.id !== citizenId);
 
-                
+
                 renderTable(allCitizensData);
                 alert('Citizen successfully removed.');
             }
@@ -930,7 +930,7 @@
 
             if (!citizen) return;
 
-            
+
             const newFirstName = prompt(`Editing First Name for ${citizen['FIRST NAME']} ${citizen['LAST NAME']}.\nEnter new First Name:`, citizen['FIRST NAME']);
 
             if (newFirstName !== null && newFirstName.trim() !== '') {
@@ -943,13 +943,13 @@
                         const newGender = prompt(`Enter new Gender ('Male' or 'Female') for ${newFirstName} ${newLastName}:`, citizen.GENDER);
 
                         if (newGender !== null && newGender.trim() !== '') {
-                            
+
                             citizen['FIRST NAME'] = newFirstName.trim();
                             citizen['LAST NAME'] = newLastName.trim();
                             citizen.PUROK = newPurok.trim();
                             citizen.GENDER = newGender.trim();
 
-                            
+
                             renderTable(allCitizensData);
                             alert('Citizen data updated successfully!');
                         }
@@ -971,9 +971,9 @@ Last Name: ${citizen['LAST NAME']}
 Gender: ${citizen.GENDER}
 `);
         }
-        
 
-        
+
+
         document.getElementById('exportBtn').addEventListener('click', exportToXLSX);
 
         function exportToXLSX() {
@@ -982,7 +982,7 @@ Gender: ${citizen.GENDER}
                 return;
             }
 
-            
+
             const dataToExport = allCitizensData.map(c => ({
                 PUROK: c.PUROK,
                 'FIRST NAME': c['FIRST NAME'],
@@ -994,20 +994,20 @@ Gender: ${citizen.GENDER}
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, "Barangay Citizens");
 
-            
+
             XLSX.writeFile(workbook, "Barangay_Santol_Citizens.xlsx");
 
             alert(`Exported ${dataToExport.length} records to "Barangay_Santol_Citizens.xlsx"!`);
         }
-        
 
-        
+
+
         document.getElementById('searchBtn').addEventListener('click', performSearch);
         document.getElementById('searchInput').addEventListener('keyup', function (e) {
             if (e.key === 'Enter') {
                 performSearch();
             } else if (this.value === '') {
-                
+
                 performSearch();
             }
         });
@@ -1015,21 +1015,21 @@ Gender: ${citizen.GENDER}
         function performSearch() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
 
-            
+
             const filteredCitizens = allCitizensData.filter(citizen => {
-                
+
                 const citizenText = `${citizen.PUROK} ${citizen['FIRST NAME']} ${citizen['LAST NAME']} ${citizen.GENDER}`.toLowerCase();
                 return citizenText.includes(searchTerm);
             });
 
-            
+
             renderTable(filteredCitizens);
         }
-        
 
-        
+
+
         window.onload = function () {
-            
+
             const sampleData = [
                 { id: 101, PUROK: '1', 'FIRST NAME': 'Juan', 'LAST NAME': 'Dela Cruz', GENDER: 'Male' },
                 { id: 102, PUROK: '2', 'FIRST NAME': 'Maria', 'LAST NAME': 'Santos', GENDER: 'Female' },
@@ -1039,11 +1039,10 @@ Gender: ${citizen.GENDER}
                 { id: 106, PUROK: '2', 'FIRST NAME': 'Elena', 'LAST NAME': 'Torres', GENDER: 'Female' }
             ];
 
-            allCitizensData = sampleData; 
-            renderTable(allCitizensData); 
+            allCitizensData = sampleData;
+            renderTable(allCitizensData);
         };
     </script>
 </body>
 
 </html>
-
